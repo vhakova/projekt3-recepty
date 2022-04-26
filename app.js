@@ -1,9 +1,6 @@
 /*
 Co je za úkol v tomto projektu:
 
-1) Do prvku s id="recepty" vygeneruj z dat seznam všech receptů z naší "databáze".
-HTML vzor, jak vygenerovaný recept vypadá, je zakomentovaný v index.html.
-
 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
 by se měl seznam receptů vyfiltrovat podle hledaného slova.
 
@@ -19,11 +16,17 @@ recept-hodnoceni, recept-nazev, recept-popis.
 */
 
 //pole s recepty => recepty
-//Vytvoření šablony receptu
 
-window.addEventListener("load", vypisRecept);
+i = 0;
 
-function vypisRecept() {
+window.addEventListener("load", poNacteni);
+
+function poNacteni() {
+    vypisRecepty();
+}
+
+//Vytvoření náhledového boxíku receptu
+function vypisRecepty() {
     for (let i=0; i<recepty.length; i++) {
         const poleReceptu = document.querySelector('#recepty');
 
@@ -36,6 +39,7 @@ function vypisRecept() {
         boxReceptu.className = "recept";
         boxObrazkuReceptu.className = "recept-obrazek";
         receptInfo.className = "recept-info";
+        boxReceptu.dataset.index = i;
 
         obrazekReceptu.src = recepty[i].img;
         obrazekReceptu.alt = recepty[i].nadpis;
@@ -47,6 +51,38 @@ function vypisRecept() {
         boxReceptu.appendChild(receptInfo);
         boxObrazkuReceptu.appendChild(obrazekReceptu);
         receptInfo.appendChild(receptNadpis);
+
+        boxReceptu.addEventListener('click', vypisPopis);
     }
 
 }
+
+//Vytvoření detailního popisu ke zvolenému receptu
+
+function vypisPopis(vybranyRecept) {
+    let index = vybranyRecept.currentTarget.dataset.index;
+
+    document.querySelector('#recept-foto').src = recepty[index].img;
+    document.querySelector('#recept-kategorie').innerHTML = recepty[index].kategorie;
+    document.querySelector('#recept-hodnoceni').innerHTML = recepty[index].hodnoceni;
+    document.querySelector('#recept-nazev').innerHTML = recepty[index].nadpis;
+    document.querySelector('#recept-popis').innerHTML = recepty[index].popis;
+}
+
+//Vyhledávání receptu
+
+function zaznamHledanehoVyrazu() {
+    let hledanyVyraz = document.querySelector('input[id=hledat]').value;
+    return hledanyVyraz;
+}
+
+function hledejPodleNazvu() {
+    let seznamReceptu = [];
+
+    for (let i=0; i<recepty.length; i++) {
+        seznamReceptu.push(recepty[i].nadpis);
+    }
+
+    document.getElementById("#recepty-info").innerHTML = seznamReceptu;
+}
+
