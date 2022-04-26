@@ -17,8 +17,8 @@ localStorage = [];
 window.addEventListener("load", poNacteni);
 
 function poNacteni() {
-    vypisRecepty();
     alzheimerPojistka();
+    vypisRecepty();
 }
 
 //Vytvoření náhledového boxíku receptu
@@ -61,23 +61,23 @@ function vypisRecepty() {
 //Vytvoření detailního popisu ke zvolenému receptu
 function vypisPopis(vybranyRecept) {
     //Zaměření indexu kliknutého políčka podle data-index = i
-    let index = vybranyRecept.currentTarget.dataset.index;
+    i = vybranyRecept.currentTarget.dataset.index;
 
     vytvorSablonuPrispevku();
 
     //Vymazání předchozího záznamu v localStorage
     localStorage.clear();
     //Zapsání posledního receptu do localStorage
-    localStorage.setItem("index", index);
+    localStorage.setItem("index", i);
 }
 
 //Vytvoření šablony pro detailní příspěvek
 function vytvorSablonuPrispevku() {
-    document.querySelector('#recept-foto').src = recepty[index].img;
-    document.querySelector('#recept-kategorie').innerHTML = recepty[index].kategorie;
-    document.querySelector('#recept-hodnoceni').innerHTML = recepty[index].hodnoceni;
-    document.querySelector('#recept-nazev').innerHTML = recepty[index].nadpis;
-    document.querySelector('#recept-popis').innerHTML = recepty[index].popis;
+    document.querySelector('#recept-foto').src = recepty[i].img;
+    document.querySelector('#recept-kategorie').innerHTML = recepty[i].kategorie;
+    document.querySelector('#recept-hodnoceni').innerHTML = recepty[i].hodnoceni;
+    document.querySelector('#recept-nazev').innerHTML = recepty[i].nadpis;
+    document.querySelector('#recept-popis').innerHTML = recepty[i].popis;
 }
 
 //Vypsání posledního příspěvku z localStorage
