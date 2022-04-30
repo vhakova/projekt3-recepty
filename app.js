@@ -5,14 +5,15 @@ Co je za úkol v tomto projektu:
 by se měl seznam receptů vyfiltrovat podle hledaného slova.
 
 3) Doplň filtrovanání receptů podle kategorie.
-
-4) Doplň řazení receptů podle hodnocení.
 */
 
 //pole s recepty => recepty
 
 i = 0;
 localStorage = [];
+let vypisHodnoceni = [];
+let vypisKategorii = [];
+let vypisNazvu = [];
 
 window.addEventListener("load", poNacteni);
 
@@ -87,20 +88,41 @@ function alzheimerPojistka() {
     vytvorSablonuPrispevku();
 }
 
-//Vyhledávání receptu
-
-function zaznamHledanehoVyrazu() {
-    let hledanyVyraz = document.querySelector('input[id=hledat]').value;
-    return hledanyVyraz;
+function hledej() {
+    const poleReceptu = document.querySelector('#recepty');
+    let vstup = document.getElementById("hledat").value;
+    let nalezeneRecepty = recepty.filter((value) => {
+      return value.nadpis.toLowerCase().includes(vstup.toLowerCase());
+    });
+    console.log(nalezeneRecepty);
+    poleReceptu.innerHTML = vypisRecepty(nalezeneRecepty);
 }
-
-function hledejPodleNazvu() {
-    let seznamReceptu = [];
-
-    for (let i=0; i<recepty.length; i++) {
-        seznamReceptu.push(recepty[i].nadpis);
+  
+//Řazení podle hodnocení
+function serad() {
+    document.getElementById("recepty").innerText = "";
+    let soupis = document.getElementById("razeni");
+    if (soupis.value === "2") {
+      vypisRecepty(recepty.sort(odNejhorsich));
+    } else if (soupis.value === "1") {
+      vypisRecepty(recepty.sort(odNejlepsich));
     }
-
-    document.getElementById("#recepty-info").innerHTML = seznamReceptu;
 }
+  
+function odNejhorsich(a, b) {
+    if (a.hodnoceni > b.hodnoceni) {
+      return 1;
+    } else {
+      return -1;
+    }
+}
+
+function odNejlepsich(a, b) {
+    if (a.hodnoceni < b.hodnoceni) {
+      return 1;
+    } else {
+      return -1;
+    }
+}
+
 
