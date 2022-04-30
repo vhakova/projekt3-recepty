@@ -1,128 +1,130 @@
-/*
-Co je za úkol v tomto projektu:
-
-2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
-by se měl seznam receptů vyfiltrovat podle hledaného slova.
-
-3) Doplň filtrovanání receptů podle kategorie.
-*/
-
-//pole s recepty => recepty
-
-i = 0;
-localStorage = [];
-let vypisHodnoceni = [];
-let vypisKategorii = [];
-let vypisNazvu = [];
+let poleReceptu = document.getElementById('recepty');
 
 window.addEventListener("load", poNacteni);
 
 function poNacteni() {
-    alzheimerPojistka();
-    vypisRecepty();
+    generovaniReceptu()
+    alzheimerovaPojistka();
 }
 
-//Vytvoření náhledového boxíku receptu
-function vypisRecepty() {
-    for (let i=0; i<recepty.length; i++) {
-        const poleReceptu = document.querySelector('#recepty');
 
-        //Generování struktury náhledového boxíku
-        const boxReceptu = document.createElement('div');
-        const boxObrazkuReceptu = document.createElement('div');
-        const obrazekReceptu = document.createElement('img');
-        const receptInfo = document.createElement('div');
-        const receptNadpis = document.createElement('h3');
+function vypisRecepty(i) {
 
-        //Nastavení atributů
-        boxReceptu.className = "recept";
-        boxObrazkuReceptu.className = "recept-obrazek";
-        receptInfo.className = "recept-info";
-        boxReceptu.dataset.index = i;
+    //Generování struktury náhledového boxíku
+    const boxReceptu = document.createElement('div');
+    const boxObrazkuReceptu = document.createElement('div');
+    const obrazekReceptu = document.createElement('img');
+    const receptInfo = document.createElement('div');
+    const receptNadpis = document.createElement('h3');
 
-        //Generování obrázku a nadpisu
-        obrazekReceptu.src = recepty[i].img;
-        obrazekReceptu.alt = recepty[i].nadpis;
+    //Nastavení atributů
+    boxReceptu.className = "recept";
+    boxObrazkuReceptu.className = "recept-obrazek";
+    receptInfo.className = "recept-info";
+    boxReceptu.dataset.index = i;
 
-        //Vypsání položek
-        receptNadpis.innerHTML = recepty[i].nadpis;
+    //Generování obrázku a nadpisu
+    obrazekReceptu.src = recepty[i].img;
+    obrazekReceptu.alt = recepty[i].nadpis;
 
-        poleReceptu.appendChild(boxReceptu);
-        boxReceptu.appendChild(boxObrazkuReceptu);
-        boxReceptu.appendChild(receptInfo);
-        boxObrazkuReceptu.appendChild(obrazekReceptu);
-        receptInfo.appendChild(receptNadpis);
+    //Vypsání položek
+    receptNadpis.innerHTML = recepty[i].nadpis;
 
-        //Při kliknutí zavolej vypisPopis()
-        boxReceptu.addEventListener('click', vypisPopis);
+    poleReceptu.appendChild(boxReceptu);
+    boxReceptu.appendChild(boxObrazkuReceptu);
+    boxReceptu.appendChild(receptInfo);
+    boxObrazkuReceptu.appendChild(obrazekReceptu);
+    receptInfo.appendChild(receptNadpis);
+
+    boxReceptu.addEventListener('click', () => {
+        vypisDetailReceptu(i);
+        ulozPosledniRecept(i)
+    })
+}
+
+//Vypsání receptu do seznamu
+function generovaniReceptu() {
+    for (i = 0; i < recepty.length; i++) {
+        vypisRecepty(i);
     }
-
 }
 
-//Vytvoření detailního popisu ke zvolenému receptu
-function vypisPopis(vybranyRecept) {
-    //Zaměření indexu kliknutého políčka podle data-index = i
-    i = vybranyRecept.currentTarget.dataset.index;
+// Vyhledávání
+let vyhledavani = document.getElementById('hledat');
 
-    vytvorSablonuPrispevku();
+vyhledavani.addEventListener("input", (e) => {
+    let zadanyText = e.target.value.toLowerCase();
+    poleReceptu.innerHTML = '';
 
-    //Vymazání předchozího záznamu v localStorage
-    localStorage.clear();
-    //Zapsání posledního receptu do localStorage
-    localStorage.setItem("index", i);
-}
+    for (let i = 0; i < recepty.length; i++) {
+        if (recepty[i].nadpis.toLowerCase().includes(zadanyText)) {
+            vypisRecepty(i);
+        }
+    }
+})
 
-//Vytvoření šablony pro detailní příspěvek
-function vytvorSablonuPrispevku() {
+//Filtrování podle kategorie jídla
+let filterKategorie = document.getElementById('kategorie');
+
+filterKategorie.addEventListener("input", (e) => {
+    let vybranaKategorie = e.target.value;
+    poleReceptu.innerHTML = '';
+
+    for (let i = 0; i < recepty.length; i++) {
+        if (recepty[i].stitek.includes(vybranaKategorie)) {
+            vypisRecepty(i);
+        } else if (vybranaKategorie == "vse") {
+            vypisRecepty(i);
+        }
+    }
+})
+
+//Filtrování podle hodnocení
+let filtrPodleHodnoceni = document.getElementById('razeni');
+
+filtrPodleHodnoceni.addEventListener('input', (e) => {
+    let vybraneHodnoceni = e.target.value;
+    poleReceptu.innerHTML = '';
+
+    if (vybraneHodnoceni == 1) {
+        recepty.sort(function (a, b) {
+            return b.hodnoceni - a.hodnoceni;
+        })
+        generovaniReceptu();
+    }
+    if (vybraneHodnoceni == 2) {
+        recepty.sort(function (a, b) {
+            return a.hodnoceni - b.hodnoceni;
+        })
+        generovaniReceptu();
+    }
+    if (vybraneHodnoceni == 0) {
+        generovaniReceptu();
+    }
+})
+
+//Zobrazení detailu receptu
+function vypisDetailReceptu(i) {
     document.querySelector('#recept-foto').src = recepty[i].img;
     document.querySelector('#recept-kategorie').innerHTML = recepty[i].kategorie;
     document.querySelector('#recept-hodnoceni').innerHTML = recepty[i].hodnoceni;
     document.querySelector('#recept-nazev').innerHTML = recepty[i].nadpis;
     document.querySelector('#recept-popis').innerHTML = recepty[i].popis;
-}
+};
 
-//Vypsání posledního příspěvku z localStorage
-function alzheimerPojistka() {
-    index = localStorage.getItem("index");
+//Local storage
+function ulozPosledniRecept(i) {
+    let vybranyRecept = recepty[i];
+    localStorage.vybranyRecept = JSON.stringify(vybranyRecept);
+};
 
-    vytvorSablonuPrispevku();
-}
+function alzheimerovaPojistka(i) {
+    let posledniRecept = localStorage.vybranyRecept;
 
-function hledej() {
-    const poleReceptu = document.querySelector('#recepty');
-    let vstup = document.getElementById("hledat").value;
-    let nalezeneRecepty = recepty.filter((value) => {
-      return value.nadpis.toLowerCase().includes(vstup.toLowerCase());
-    });
-    console.log(nalezeneRecepty);
-    poleReceptu.innerHTML = vypisRecepty(nalezeneRecepty);
-}
-  
-//Řazení podle hodnocení
-function serad() {
-    document.getElementById("recepty").innerText = "";
-    let soupis = document.getElementById("razeni");
-    if (soupis.value === "2") {
-      vypisRecepty(recepty.sort(odNejhorsich));
-    } else if (soupis.value === "1") {
-      vypisRecepty(recepty.sort(odNejlepsich));
+    if (!(posledniRecept === null || posledniRecept === undefined)) {
+        vybranyRecept = JSON.parse(posledniRecept);
     }
-}
-  
-function odNejhorsich(a, b) {
-    if (a.hodnoceni > b.hodnoceni) {
-      return 1;
-    } else {
-      return -1;
-    }
-}
-
-function odNejlepsich(a, b) {
-    if (a.hodnoceni < b.hodnoceni) {
-      return 1;
-    } else {
-      return -1;
-    }
-}
-
-
+    
+    recepty[i] = vybranyRecept;
+    vypisDetailReceptu(i);
+};

@@ -13,51 +13,43 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="kontejner">
-
         <header class="hlavicka">
-
             <div class="logo">
                 <img src="images/recepty-logo.svg" alt="Recepty logo">
             </div>
-
             <div class="hledani">
                 <label for="hledat">Hledat</label>
                 <div class="hledani-skupina">
-                    <input onchange="hledej()" type="text" id="hledat" placeholder="Název receptu">
-                    <button onclick="hledej()">Hledat</button>
+                    <input type="text" id="hledat" placeholder="Název receptu">
+                    <button>Hledat</button>
                 </div>
             </div>
-
             <div class="kategorie">
                 <label for="kategorie">Kategorie</label>
                 <select id="kategorie">
-                    <option value=""></option>
-                    <option>Snídaně</option>
-                    <option>Hlavní jídlo</option>
-                    <option>Dezert</option>
+                    <option value="vse"></option>
+                    <option value="snidane">Snídaně</option>
+                    <option value="hlavniJidlo">Hlavní jídlo</option>
+                    <option value="dezert">Dezert</option>
                 </select>
             </div>
-
             <div class="razeni">
                 <label for="razeni">Seřadit</label>
-                <select id="razeni" onchange="serad()">
-                    <option value=""></option>
+                <select id="razeni">
+                    <option value="0"></option>
                     <option value="1">Od nejlepších</option>
                     <option value="2">Od nejhorších</option>
                 </select>
             </div>
         </header>
 
-
         <div id="recepty" class="recepty">
-           
         </div>
 
         <div class="recept-detail">
             <div class="recept-detail-obrazek">
-                    <img id="recept-foto" src=" " alt="">
+                    <img id="recept-foto" >
             </div>
 
             <div class="recept-detail-info">
@@ -79,8 +71,6 @@
         </div>
 
     </div>
-
-    <button onclick="hledej()">Klikni</button>
 
     <script src="recepty.js"></script>
     <script src="app.js"></script>
