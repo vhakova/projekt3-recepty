@@ -64,9 +64,9 @@ vyhledavani.addEventListener("input", (e) => {
 })
 
 //Filtrování podle kategorie jídla
-let filterKategorie = document.getElementById('kategorie');
+let filtrKategorie = document.getElementById('kategorie');
 
-filterKategorie.addEventListener("input", (e) => {
+filtrKategorie.addEventListener("input", (e) => {
     let vybranaKategorie = e.target.value;
     poleReceptu.innerHTML = '';
 
